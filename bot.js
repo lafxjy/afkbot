@@ -1,12 +1,27 @@
 const mineflayer = require('mineflayer')
 
+let botInstance = null
+let reconnectTimeout = null
+
 function createBot() {
+  if (botInstance) {
+    botInstance.end()
+    botInstance = null
+  }
+
+  if (reconnectTimeout) {
+    clearTimeout(reconnectTimeout)
+    reconnectTimeout = null
+  }
+
   const bot = mineflayer.createBot({
     host: 'lafxjy.aternos.me',
     port: 25732,
     username: 'AFKBot',
     version: '1.21.11'
   })
+
+  botInstance = bot
 
   bot.on('spawn', function() {
     console.log('Bot joined!')
@@ -23,20 +38,21 @@ function createBot() {
 
   bot.on('kicked', function(reason) {
     console.log('Kicked:', reason)
-    setTimeout(createBot, 10000)
+    botInstance = null
+    reconnectTimeout = setTimeout(createBot, 15000)
   })
 
   bot.on('error', function(err) {
     console.log('Error:', err)
-    setTimeout(createBot, 10000)
+    botInstance = null
+    reconnectTimeout = setTimeout(createBot, 15000)
   })
 
   bot.on('end', function() {
     console.log('Disconnected, reconnecting...')
-    setTimeout(createBot, 10000)
+    botInstance = null
+    reconnectTimeout = setTimeout(createBot, 15000)
   })
 }
 
-// Wait 10 seconds before first connect
 setTimeout(createBot, 10000)
-
