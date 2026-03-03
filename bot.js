@@ -5,7 +5,7 @@ function createBot() {
     host: 'lafxjy.aternos.me',
     port: 25732,
     username: 'AFKBot',
-    version: '1.21.1'
+    version: '1.21.11'
   })
 
   bot.on('spawn', function() {
@@ -39,3 +39,4 @@ function createBot() {
 
 // Wait 10 seconds before first connect
 setTimeout(createBot, 10000)
+
